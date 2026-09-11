@@ -44,14 +44,17 @@ func (v MediaAsset) Validate() error {
 	if v.Status == "" || v.Access == "" || v.CreatedAt.IsZero() || strings.TrimSpace(v.CreatedBy) == "" {
 		return validation.NewErrRecordIsMissingRequiredField("status|access|createdAt|createdBy")
 	}
+	if v.Access != models4media.AccessPublic && v.Access != models4media.AccessPrivate {
+		return validation.NewErrBadRecordFieldValue("access", "must be public or private")
+	}
 	if v.Storage.Provider != "gcs" || v.Storage.Bucket == "" || v.Storage.ObjectKey == "" {
 		return validation.NewErrBadRecordFieldValue("storage", "must identify a private GCS object")
 	}
 	if v.RefCount < 0 || v.DurableRefCount < v.RefCount {
 		return validation.NewErrBadRecordFieldValue("refCount", "counts are inconsistent")
 	}
-	if v.Status == models4media.AssetStatusReady {
-		if v.ContentType == "" || v.Size <= 0 || v.Width <= 0 || v.Height <= 0 || len(v.SHA256) != 64 || v.FinalizedAt.IsZero() {
+	if v.Status == models4media.AssetStatusReady || v.Status == models4media.AssetStatusOrphaned {
+		if v.ContentType == "" || v.Size <= 0 || v.Width <= 0 || v.Height <= 0 || len(v.SHA256) != 64 || v.FinalizedAt.IsZero() || v.Storage.Generation <= 0 {
 			return validation.NewErrRecordIsMissingRequiredField("ready media metadata")
 		}
 	}

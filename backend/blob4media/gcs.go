@@ -40,10 +40,11 @@ func (s GCSStore) BeginResumableUpload(ctx context.Context, objectKey, contentTy
 }
 
 func (s GCSStore) BeginRead(ctx context.Context, objectKey string, generation int64, expiresAt time.Time) (ReadCapability, error) {
-	query := make(url.Values)
-	if generation > 0 {
-		query.Set("generation", strconv.FormatInt(generation, 10))
+	if generation <= 0 {
+		return ReadCapability{}, errors.New("read capability requires a positive object generation")
 	}
+	query := make(url.Values)
+	query.Set("generation", strconv.FormatInt(generation, 10))
 	signedURL, err := storage.SignedURL(s.Bucket, objectKey, &storage.SignedURLOptions{
 		Scheme: storage.SigningSchemeV4, GoogleAccessID: s.GoogleAccessID, PrivateKey: s.PrivateKey, SignBytes: s.contextSigner(ctx),
 		Method: http.MethodGet, Expires: expiresAt, QueryParameters: query,
@@ -75,7 +76,11 @@ func (s GCSStore) InspectImage(ctx context.Context, objectKey string, maxBytes i
 	if attrs.ContentType != "image/jpeg" && attrs.ContentType != "image/png" {
 		return ImageInfo{}, fmt.Errorf("unsupported stored content type %q", attrs.ContentType)
 	}
-	reader, err := obj.NewReader(ctx)
+	if attrs.Generation <= 0 {
+		return ImageInfo{}, errors.New("GCS object has no positive generation")
+	}
+	versionedObject := obj.Generation(attrs.Generation)
+	reader, err := versionedObject.NewReader(ctx)
 	if err != nil {
 		return ImageInfo{}, fmt.Errorf("open GCS object for hashing: %w", err)
 	}
@@ -88,7 +93,7 @@ func (s GCSStore) InspectImage(ctx context.Context, objectKey string, maxBytes i
 	if closeErr != nil {
 		return ImageInfo{}, fmt.Errorf("close GCS object after hashing: %w", closeErr)
 	}
-	reader, err = obj.NewReader(ctx)
+	reader, err = versionedObject.NewReader(ctx)
 	if err != nil {
 		return ImageInfo{}, fmt.Errorf("open GCS object for image validation: %w", err)
 	}

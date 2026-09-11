@@ -78,10 +78,43 @@ func TestOriginRedirectsReadyMediaToShortLivedBlobCapability(t *testing.T) {
 	head.Header.Set("Authorization", "Bearer origin-secret")
 	headRecorder := httptest.NewRecorder()
 	handler.ServeHTTP(headRecorder, head)
-	if headRecorder.Code != http.StatusOK || headRecorder.Header().Get("Content-Type") != "image/png" || headRecorder.Header().Get("Content-Length") != "5" {
+	if headRecorder.Code != http.StatusTemporaryRedirect || headRecorder.Header().Get("Location") == "" {
 		t.Fatalf("HEAD response = status %d headers %#v", headRecorder.Code, headRecorder.Header())
 	}
-	if blob.readCalls != 1 {
-		t.Fatalf("HEAD created a read capability; calls=%d", blob.readCalls)
+	if blob.readCalls != 2 {
+		t.Fatalf("HEAD did not verify read capability; calls=%d", blob.readCalls)
+	}
+}
+
+func TestOriginRefusesUnsupportedAssetAccess(t *testing.T) {
+	for _, tc := range []struct {
+		access   models4media.Access
+		verified string
+		allowed  bool
+	}{
+		{access: models4media.AccessPublic, verified: "public", allowed: true},
+		{access: models4media.AccessPrivate, verified: "private", allowed: true},
+		{access: models4media.AccessPrivate, verified: "public", allowed: false},
+		{access: models4media.Access("future-access"), verified: "public", allowed: false},
+		{access: "", verified: "private", allowed: false},
+	} {
+		if got := originAccessAllowed(tc.access, tc.verified); got != tc.allowed {
+			t.Errorf("originAccessAllowed(%q, %q) = %v, want %v", tc.access, tc.verified, got, tc.allowed)
+		}
+	}
+}
+
+func TestRegisterRoutesIncludesOriginHead(t *testing.T) {
+	routes := make(map[string]http.HandlerFunc)
+	Handler{}.RegisterRoutes(func(method, path string, handler http.HandlerFunc) {
+		routes[method+" "+path] = handler
+	})
+	for _, route := range []string{
+		http.MethodGet + " /v0/media/origin",
+		http.MethodHead + " /v0/media/origin",
+	} {
+		if routes[route] == nil {
+			t.Errorf("route %q is not registered", route)
+		}
 	}
 }

@@ -71,6 +71,29 @@ describe('media edge', () => {
     expect(imageBinding.input).not.toHaveBeenCalled();
   });
 
+  it('verifies the original before answering HEAD', async () => {
+    edgeCache();
+    const origin = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const requestURL = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url);
+      if (requestURL.hostname === 'api.example') {
+        return new Response(null, {
+          status: 307,
+          headers: { Location: 'https://storage.googleapis.com/media-originals/original?signed=true' },
+        });
+      }
+      return new Response('x', { status: 206 });
+    });
+    const response = await worker.fetch(new Request('https://media.sneat.co/m/m_abcdefghijklmnopqrstuvwxyz/avatar', { method: 'HEAD' }), {
+      ORIGIN_BASE_URL: 'https://api.example', MEDIA_ACCESS_PUBLIC_KEY: '', MEDIA_ORIGIN_SECRET: 'secret', IMAGES: images().binding,
+    } as never);
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toBe('image/webp');
+    expect((origin.mock.calls[0][1] as RequestInit).method).toBe('HEAD');
+    expect((origin.mock.calls[1][1] as RequestInit).method).toBe('GET');
+    expect(new Headers((origin.mock.calls[1][1] as RequestInit).headers).get('Range')).toBe('bytes=0-0');
+  });
+
   it('keeps authorized and anonymous transformed responses under separate cache policies', async () => {
     const keys = (await crypto.subtle.generateKey(
       { name: 'Ed25519' },

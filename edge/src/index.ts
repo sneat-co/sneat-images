@@ -65,13 +65,6 @@ export default {
       },
       redirect: 'manual',
     });
-    if (request.method === 'HEAD') {
-      if (!response.ok) return new Response(await response.text(), { status: response.status });
-      return new Response(null, {
-        status: response.status,
-        headers: { 'Cache-Control': cacheControl, 'Content-Type': 'image/webp', Vary: 'Accept' },
-      });
-    }
     if (response.status !== httpStatusTemporaryRedirect) {
       if (!response.ok) return new Response(await response.text(), { status: response.status });
       return new Response('origin did not issue a media read capability', { status: 502 });
@@ -82,10 +75,20 @@ export default {
     if (readURL.protocol !== 'https:' || readURL.hostname !== 'storage.googleapis.com') {
       return new Response('origin read capability is invalid', { status: 502 });
     }
-    const original = await fetch(readURL, { method: 'GET', redirect: 'error' });
+    const original = await fetch(readURL, {
+      method: 'GET',
+      headers: request.method === 'HEAD' ? { Range: 'bytes=0-0' } : undefined,
+      redirect: 'error',
+    });
     if (!original.ok) {
       console.error('media registry points to unavailable original', { mediaID, status: original.status });
       return new Response(await original.text(), { status: original.status });
+    }
+    if (request.method === 'HEAD') {
+      return new Response(null, {
+        status: 200,
+        headers: { 'Cache-Control': cacheControl, 'Content-Type': 'image/webp', Vary: 'Accept' },
+      });
     }
     if (!original.body) return new Response('media original returned no image body', { status: 502 });
 

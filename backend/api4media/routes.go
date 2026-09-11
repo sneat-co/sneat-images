@@ -53,6 +53,7 @@ func (h Handler) RegisterRoutes(handle extension.HTTPHandleFunc) {
 	handle(http.MethodPost, "/v0/media/links/restore", h.restore)
 	handle(http.MethodPost, "/v0/media/access", h.access)
 	handle(http.MethodGet, "/v0/media/origin", h.origin)
+	handle(http.MethodHead, "/v0/media/origin", h.origin)
 }
 
 func authenticatedRequest(w http.ResponseWriter, r *http.Request, request facade.Request) (facade.ContextWithUser, bool) {
@@ -166,16 +167,12 @@ func (h Handler) origin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "media not ready", http.StatusConflict)
 		return
 	}
-	if asset.Access == models4media.AccessPrivate && r.Header.Get("X-Media-Access-Verified") != "private" {
-		http.Error(w, "private media requires verified access", http.StatusForbidden)
+	if !originAccessAllowed(asset.Access, r.Header.Get("X-Media-Access-Verified")) {
+		log.Printf("refuse media origin access mediaID=%s access=%q", mediaID, asset.Access)
+		http.Error(w, "media access unavailable", http.StatusForbidden)
 		return
 	}
 	w.Header().Set("Cache-Control", "private, no-store")
-	if r.Method == http.MethodHead {
-		w.Header().Set("Content-Type", asset.ContentType)
-		w.Header().Set("Content-Length", fmt.Sprint(asset.Size))
-		return
-	}
 	capability, err := h.Service.Blob.BeginRead(r.Context(), asset.Storage.ObjectKey, asset.Storage.Generation, time.Now().UTC().Add(2*time.Minute))
 	if err != nil {
 		log.Printf("create media original read capability mediaID=%s objectKey=%s err=%v", mediaID, asset.Storage.ObjectKey, err)
@@ -183,4 +180,15 @@ func (h Handler) origin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, capability.URL, http.StatusTemporaryRedirect)
+}
+
+func originAccessAllowed(access models4media.Access, verified string) bool {
+	switch access {
+	case models4media.AccessPublic:
+		return true
+	case models4media.AccessPrivate:
+		return verified == "private"
+	default:
+		return false
+	}
 }

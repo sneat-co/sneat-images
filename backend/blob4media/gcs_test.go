@@ -89,3 +89,10 @@ func TestGCSStoreBeginReadPinsGenerationAndUsesContextAwareSigner(t *testing.T) 
 		t.Fatalf("signed URL query = %q", parsed.RawQuery)
 	}
 }
+
+func TestGCSStoreBeginReadRejectsMissingGeneration(t *testing.T) {
+	store := GCSStore{Bucket: "media-originals"}
+	if _, err := store.BeginRead(context.Background(), "users/u1/media/m_123/original", 0, time.Now().Add(time.Minute)); err == nil {
+		t.Fatal("BeginRead() accepted an unpinned object generation")
+	}
+}
