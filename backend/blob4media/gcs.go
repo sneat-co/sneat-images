@@ -86,24 +86,18 @@ func (s GCSStore) InspectImage(ctx context.Context, objectKey string, maxBytes i
 	}
 	hash := sha256.New()
 	_, copyErr := io.Copy(hash, io.LimitReader(reader, maxBytes+1))
-	closeErr := reader.Close()
+	_ = reader.Close()
 	if copyErr != nil {
 		return ImageInfo{}, fmt.Errorf("hash GCS object: %w", copyErr)
-	}
-	if closeErr != nil {
-		return ImageInfo{}, fmt.Errorf("close GCS object after hashing: %w", closeErr)
 	}
 	reader, err = versionedObject.NewReader(ctx)
 	if err != nil {
 		return ImageInfo{}, fmt.Errorf("open GCS object for image validation: %w", err)
 	}
 	config, format, decodeErr := image.DecodeConfig(io.LimitReader(reader, maxBytes+1))
-	closeErr = reader.Close()
+	_ = reader.Close()
 	if decodeErr != nil {
 		return ImageInfo{}, fmt.Errorf("decode stored image: %w", decodeErr)
-	}
-	if closeErr != nil {
-		return ImageInfo{}, fmt.Errorf("close GCS object after validation: %w", closeErr)
 	}
 	if format == "jpeg" && attrs.ContentType != "image/jpeg" || format == "png" && attrs.ContentType != "image/png" {
 		return ImageInfo{}, fmt.Errorf("stored content type %q does not match image format %q", attrs.ContentType, format)
