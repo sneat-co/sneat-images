@@ -5,3 +5,6 @@ project:
     host: github.com
     org: sneat-co
     repo: sneat-images
+
+coverage:
+    min_test_coverage_percent: 100
