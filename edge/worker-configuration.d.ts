@@ -3,7 +3,7 @@
 // Runtime types generated with workerd@1.20250906.0 2026-09-08
 declare namespace Cloudflare {
 	interface Env {
-		ORIGIN_BASE_URL: "https://sneat-app-354fvnqbaa-ey.a.run.app";
+		ORIGIN_BASE_URL: "https://sneat-app-354fvnqbaa-ew.a.run.app";
 		IMAGES: ImagesBinding;
 	}
 }
