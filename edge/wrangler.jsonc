@@ -6,7 +6,7 @@
   "routes": [{ "pattern": "media.sneat.co/m/*", "zone_name": "sneat.co" }],
   "images": { "binding": "IMAGES" },
   "vars": {
-    "ORIGIN_BASE_URL": "https://sneat-app-354fvnqbaa-ey.a.run.app"
+    "ORIGIN_BASE_URL": "https://sneat-app-354fvnqbaa-ew.a.run.app"
   },
   "observability": {
     "enabled": true,
