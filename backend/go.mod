@@ -2,7 +2,7 @@ module github.com/sneat-co/sneat-images/backend
 
 go 1.26.0
 
-toolchain go1.27.0
+toolchain go1.27.3
 
 require (
 	cloud.google.com/go/storage v1.67.0
