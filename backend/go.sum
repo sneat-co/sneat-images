@@ -87,6 +87,8 @@ github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 h1:GFCKgm
 github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10/go.mod h1:t/avpk3KcrXxUnYOhZhMXJlSEyie6gQbtLq5NM3loB8=
 github.com/sneat-co/sneat-ext-contracts/media v0.1.1 h1:3IAIiloQ7NRNgPTkpaVIIh4FnskrJVvz1gfszpKbkfc=
 github.com/sneat-co/sneat-ext-contracts/media v0.1.1/go.mod h1:h9Oe1tfafplZzHu8JhDNmyHkKKiYSP77qKPH6TAFj9k=
+github.com/sneat-co/sneat-ext-contracts/media v0.1.2 h1:xskxD0M5c3yiA/GPr12he3XJDbYogjOuB7yB0GDc1FI=
+github.com/sneat-co/sneat-ext-contracts/media v0.1.2/go.mod h1:h9Oe1tfafplZzHu8JhDNmyHkKKiYSP77qKPH6TAFj9k=
 github.com/sneat-co/sneat-go-core v0.67.10-0.20260906163259-ae0ddbe770a8 h1:+UF26KuyIgHT2tNijNPvEl5JAMbxJCjKeSF4SI5n7qQ=
 github.com/sneat-co/sneat-go-core v0.67.10-0.20260906163259-ae0ddbe770a8/go.mod h1:yaR/uL4FFwJi03rAfjV1Usuro6Mblxnk9W4yDvj7gZ0=
 github.com/spiffe/go-spiffe/v2 v2.6.0 h1:l+DolpxNWYgruGQVV0xsfeya3CsC7m8iBzDnMpsbLuo=
