@@ -7,7 +7,7 @@ toolchain go1.27.3
 require (
 	cloud.google.com/go/storage v1.67.0
 	github.com/dal-go/dalgo v0.79.3
-	github.com/dal-go/record v0.1.3
+	github.com/dal-go/record v0.1.5
 	github.com/sneat-co/sneat-ext-contracts/media v0.1.1
 	github.com/sneat-co/sneat-go-core v0.67.10-0.20260906163259-ae0ddbe770a8
 	github.com/strongo/validation v0.0.13
