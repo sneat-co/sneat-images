@@ -101,6 +101,8 @@ github.com/strongo/strongoapp v0.31.58 h1:euJXe4sEsEm1IiO8hLrlpcE3pzpJsOYUP7Xc2y
 github.com/strongo/strongoapp v0.31.58/go.mod h1:OBNGexSLAWM46owjTehTmBlkzhv2LOibbXqtWUdASnA=
 github.com/strongo/validation v0.0.13 h1:EgRfP5XBZSVoiOd4805OGCOVqZndeqFONpSmdSerEE8=
 github.com/strongo/validation v0.0.13/go.mod h1:EY+//fgQhn6rr0rOvWRJuUCTSk5BIETZL2bL9CIDhbs=
+github.com/strongo/validation v0.0.17 h1:xIYI58B+82ai7vBJc4wKpj2KLDFC9L/PpkzmSZHHRzU=
+github.com/strongo/validation v0.0.17/go.mod h1:95QitYgp3A+Yq5p5dpylCgFi6nglCIkUcF8pC7Xh3qw=
 go.opentelemetry.io/auto/sdk v1.2.1 h1:jXsnJ4Lmnqd11kwkBV2LgLoFMZKizbCi5fNZ/ipaZ64=
 go.opentelemetry.io/auto/sdk v1.2.1/go.mod h1:KRTj+aOaElaLi+wW1kO/DZRXwkF4C5xPbEe3ZiIhN7Y=
 go.opentelemetry.io/contrib/detectors/gcp v1.44.0 h1:NmLfL734pJhM0JKaYd2Y28+nY9dPRWYAAbxhRCrKXPw=
