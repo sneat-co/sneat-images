@@ -20,7 +20,7 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v6
         with:
           go-version-file: backend/go.mod
@@ -40,7 +40,7 @@ jobs:
       run:
         working-directory: edge
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
         with:
           version: 10.30.3
