@@ -6,11 +6,11 @@ toolchain go1.27.3
 
 require (
 	cloud.google.com/go/storage v1.67.0
-	github.com/dal-go/dalgo v0.79.3
+	github.com/dal-go/dalgo v0.97.0
 	github.com/dal-go/record v0.1.5
 	github.com/sneat-co/sneat-ext-contracts/media v0.1.2
 	github.com/sneat-co/sneat-go-core v0.67.10-0.20260906163259-ae0ddbe770a8
-	github.com/strongo/validation v0.0.13
+	github.com/strongo/validation v0.0.17
 	google.golang.org/api v0.287.1
 )
 
@@ -25,7 +25,7 @@ require (
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.33.0 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/metric v0.57.0 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.57.0 // indirect
-	github.com/RoaringBitmap/roaring/v2 v2.26.0 // indirect
+	github.com/RoaringBitmap/roaring/v2 v2.30.0 // indirect
 	github.com/bits-and-blooms/bitset v1.24.6 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
@@ -47,7 +47,7 @@ require (
 	github.com/strongo/decimal v0.1.2 // indirect
 	github.com/strongo/delaying v0.2.6 // indirect
 	github.com/strongo/logus v0.4.3 // indirect
-	github.com/strongo/random v0.0.1 // indirect
+	github.com/strongo/random v0.0.3 // indirect
 	github.com/strongo/slice v0.3.10 // indirect
 	github.com/strongo/strongoapp v0.31.58 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
