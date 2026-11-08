@@ -46,6 +46,8 @@ github.com/dal-go/dalgo v0.79.3 h1:awEX08IaxK135rrftqutBbdi/fWwAMx756YWgF2+W44=
 github.com/dal-go/dalgo v0.79.3/go.mod h1:p0VdxLWu+Z/+kNYj7EdZHR+k3LzlpaUBo8atVeUiKBs=
 github.com/dal-go/dalgo v0.96.2 h1:4sRgnlNDsWDIY3n3rhW3PJarE1T+uhIfS+HnQP9zJg0=
 github.com/dal-go/dalgo v0.96.2/go.mod h1:UCGV7G50rWbXamWXbmbBGmHiACWtNYUFNIL+qM5AAs8=
+github.com/dal-go/dalgo v0.102.0 h1:c2/IeLs+URsW345hDVsA7mf9Qk87RFk+X25/awFDtjI=
+github.com/dal-go/dalgo v0.102.0/go.mod h1:UCGV7G50rWbXamWXbmbBGmHiACWtNYUFNIL+qM5AAs8=
 github.com/dal-go/record v0.1.5 h1:lkPxiJA7S2oE5tA0WUayezd+lmaiEekrEcGz/HRhzLg=
 github.com/dal-go/record v0.1.5/go.mod h1:PuoOCH74/Vf+pIVWSdrMg7OdUmlSlPgj68yJ+gM42To=
 github.com/envoyproxy/go-control-plane v0.14.0 h1:hbG2kr4RuFj222B6+7T83thSPqLjwBIfQawTkC++2HA=
@@ -89,6 +91,8 @@ github.com/sneat-co/sneat-go-core v0.67.10-0.20260906163259-ae0ddbe770a8 h1:+UF2
 github.com/sneat-co/sneat-go-core v0.67.10-0.20260906163259-ae0ddbe770a8/go.mod h1:yaR/uL4FFwJi03rAfjV1Usuro6Mblxnk9W4yDvj7gZ0=
 github.com/sneat-co/sneat-go-core v0.77.1 h1:msVhjIcHs9bjZGlXTcSH2nVwiLIhu+2DvophNLDkXqE=
 github.com/sneat-co/sneat-go-core v0.77.1/go.mod h1:MFOzoIyuu4muT6d6onJss/iaoqCSv6NpwKNC9B3iDWI=
+github.com/sneat-co/sneat-go-core v0.77.3 h1:tGSYuRmlgVblTbpSlPoldmqZeei9ZvUhnlu5fOm+L2k=
+github.com/sneat-co/sneat-go-core v0.77.3/go.mod h1:FaJme/UkThN0YDuV8VtU/idpL8oIEA6Z4QLZAyfXe+E=
 github.com/spiffe/go-spiffe/v2 v2.7.0 h1:uXe1MflJoHw58wAUvxVlcM7WpKtijWG7I1UidcGh6g4=
 github.com/spiffe/go-spiffe/v2 v2.7.0/go.mod h1:47Q0Q9/AqGha8QLHp+kxpH4Wca7X7EnOtlIJy3mxZ3U=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
