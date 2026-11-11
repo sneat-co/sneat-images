@@ -97,6 +97,8 @@ github.com/sneat-co/sneat-go-core v0.77.3 h1:tGSYuRmlgVblTbpSlPoldmqZeei9ZvUhnlu
 github.com/sneat-co/sneat-go-core v0.77.3/go.mod h1:FaJme/UkThN0YDuV8VtU/idpL8oIEA6Z4QLZAyfXe+E=
 github.com/sneat-co/sneat-go-core v0.77.4 h1:Y7QVQ9rOJbYfH0tHMPmF7EfrG0pfcJsvwuqr3NlX3z0=
 github.com/sneat-co/sneat-go-core v0.77.4/go.mod h1:jmA8mkOj7sVWUOi4io5g25peuf7YEtWeMubaRPqdZ6M=
+github.com/sneat-co/sneat-go-core v0.78.0 h1:wlSNbpWngA7PRXUoiZyC4V1i+88XZ3CRf26yyCV+yMk=
+github.com/sneat-co/sneat-go-core v0.78.0/go.mod h1:jmA8mkOj7sVWUOi4io5g25peuf7YEtWeMubaRPqdZ6M=
 github.com/spiffe/go-spiffe/v2 v2.7.0 h1:uXe1MflJoHw58wAUvxVlcM7WpKtijWG7I1UidcGh6g4=
 github.com/spiffe/go-spiffe/v2 v2.7.0/go.mod h1:47Q0Q9/AqGha8QLHp+kxpH4Wca7X7EnOtlIJy3mxZ3U=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
