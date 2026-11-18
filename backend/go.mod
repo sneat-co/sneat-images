@@ -9,7 +9,7 @@ require (
 	github.com/dal-go/dalgo v0.102.4
 	github.com/dal-go/record v0.1.5
 	github.com/sneat-co/sneat-ext-contracts/media v0.1.2
-	github.com/sneat-co/sneat-go-core v0.78.1
+	github.com/sneat-co/sneat-go-core v0.79.2
 	github.com/strongo/validation v0.0.18
 	google.golang.org/api v0.315.0
 )
