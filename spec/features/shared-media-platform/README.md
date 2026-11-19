@@ -38,7 +38,11 @@ adapter. Removing a link is recoverable until its purge time; removing the last
 recoverable link marks the asset orphaned but never deletes bytes immediately.
 
 Clients use semantic variants at `https://media.sneat.co/m/{mediaID}/{variant}`.
-The edge accepts only the named avatar, thumbnail, preview, and large variants.
+The edge accepts only the named avatar (`avatar-xs`, `avatar-sm`, `avatar`,
+`avatar-lg`), `thumbnail`, `preview`, `large`, `stream-landscape` (1920x1080) and
+`stream-portrait` (1080x1920) variants. The two stream variants crop to fill,
+centred, and serve video-stream backgrounds for assets uploaded with
+`access: public`, fetched without credentials by the streaming compositor.
 Public delivery is explicit. Private delivery requires a short-lived Ed25519
 token whose audience, expiry, and user/Space scope are verified at the edge.
 The access token is not part of the origin/cache identity. On a cache miss the
@@ -85,6 +89,21 @@ have multiple deterministic links and removing one cannot destroy the others.
 Named immutable variants are served through `media.sneat.co`; private requests
 require an edge-verified, short-lived scoped token, and token text is excluded
 from the transformed origin/cache identity.
+
+### AC: stream-variants
+
+`/m/{mediaID}/stream-landscape` and `/m/{mediaID}/stream-portrait` return WebP
+of exactly 1920x1080 and 1080x1920 (fit cover, centred) for public assets
+without a token, with public immutable cache headers.
+
+- `fit: cover` upscales small inputs, so consumers enforce minimums: the
+  videostreaming module accepts channel backgrounds only at >=1920x1080 or
+  >=1080x1920 and <=4096 on the long side.
+- One upload serves both orientations, so a 1920x1080 upload is scaled about
+  1.78x for `stream-portrait` (softer); uploads of 3413x1920+ or square >=1920
+  avoid that.
+- Public variants are cached `immutable` for a year, so a removed background
+  may stay fetchable from cache until evicted.
 
 ### AC: global-avatar
 
