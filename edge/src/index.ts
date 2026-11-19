@@ -46,7 +46,7 @@ export default {
     const bindings = env as Bindings;
     const url = new URL(request.url);
     const match = /^\/m\/(m_[A-Za-z0-9_-]{20,40})\/([a-z-]+)$/.exec(url.pathname);
-    if (!match || !(match[2] in variants)) return new Response('not found', { status: 404 });
+    if (!match || !Object.hasOwn(variants, match[2])) return new Response('not found', { status: 404 });
     const mediaID = match[1];
     const token = url.searchParams.get('token');
     const privateAccess = token ? await verifyToken(token, mediaID, bindings.MEDIA_ACCESS_PUBLIC_KEY) : false;

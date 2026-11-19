@@ -96,6 +96,15 @@ from the transformed origin/cache identity.
 of exactly 1920x1080 and 1080x1920 (fit cover, centred) for public assets
 without a token, with public immutable cache headers.
 
+- `fit: cover` upscales small inputs, so consumers enforce minimums: the
+  videostreaming module accepts channel backgrounds only at >=1920x1080 or
+  >=1080x1920 and <=4096 on the long side.
+- One upload serves both orientations, so a 1920x1080 upload is scaled about
+  1.78x for `stream-portrait` (softer); uploads of 3413x1920+ or square >=1920
+  avoid that.
+- Public variants are cached `immutable` for a year, so a removed background
+  may stay fetchable from cache until evicted.
+
 ### AC: global-avatar
 
 A user can crop, upload, replace, remove, and restore a global avatar using the
