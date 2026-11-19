@@ -13,6 +13,7 @@ import (
 	"log"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strings"
 	"time"
 
@@ -48,6 +49,9 @@ type Service struct {
 	OrphanGrace time.Duration
 	UploadGrace time.Duration
 	AccessKey   ed25519.PrivateKey
+	// TrustedReleaseTypes lists the target types ReleaseLink may release,
+	// set by the host (for example videostreaming.channelBackground).
+	TrustedReleaseTypes []string
 }
 
 type BeginUploadRequest struct {
@@ -413,6 +417,65 @@ func (s *Service) Unlink(ctx context.Context, userID string, target models4media
 			return err
 		}
 		result = LinkResult{MediaID: previous.MediaID, LinkID: linkID, RefCount: asset.RefCount, DurableRefCount: asset.DurableRefCount, Status: link.Status, PurgeAfter: link.PurgeAfter}
+		return nil
+	})
+	return result, err
+}
+
+// ReleaseLink is a TRUSTED server-side release of one durable media link, for
+// host/module-initiated cleanup after the owning module has already deleted its
+// target (when TargetAdapter.Current can no longer find the link and the user
+// authorizer would refuse). It performs no authorization and never touches the
+// target adapter or the target's forward reference (assumed already gone). Only
+// target types listed in Service.TrustedReleaseTypes are accepted. Never expose
+// it over HTTP; callers must have authorized the action themselves.
+//
+// It marks the exact link deleted with PurgeAfter = now (no recovery window,
+// because the target is gone) and decrements the asset RefCount exactly as
+// Unlink does, in one transaction. A missing link is success with a zero
+// LinkResult (empty Status) so a caller can log the miss; an already deleted
+// link is success with its unchanged state.
+func (s *Service) ReleaseLink(ctx context.Context, mediaID string, target models4media.Target, role string) (LinkResult, error) {
+	s.defaults()
+	if strings.TrimSpace(mediaID) == "" || strings.TrimSpace(role) == "" {
+		return LinkResult{}, errors.New("mediaID and role are required")
+	}
+	if err := target.Validate(); err != nil {
+		return LinkResult{}, err
+	}
+	if !slices.Contains(s.TrustedReleaseTypes, target.Type) {
+		return LinkResult{}, fmt.Errorf("target type %q is not trusted for release", target.Type)
+	}
+	linkID := dal4media.LinkID(target, role)
+	var result LinkResult
+	err := s.DB.RunReadwriteTransaction(ctx, func(ctx context.Context, tx dal.ReadwriteTransaction) error {
+		link := new(dbo4media.MediaLink)
+		if err := tx.Get(ctx, dal4media.NewLinkRecord(mediaID, linkID, link)); err != nil {
+			if record.IsNotFound(err) {
+				return nil
+			}
+			return err
+		}
+		asset := new(dbo4media.MediaAsset)
+		if err := tx.Get(ctx, dal4media.NewMediaRecord(mediaID, asset)); err != nil {
+			return err
+		}
+		result = LinkResult{MediaID: mediaID, LinkID: linkID, RefCount: asset.RefCount, DurableRefCount: asset.DurableRefCount, Status: link.Status, PurgeAfter: link.PurgeAfter}
+		if link.Status == models4media.LinkStatusDeleted {
+			return nil
+		}
+		now := s.Now().UTC()
+		link.Status, link.DeletedAt, link.PurgeAfter = models4media.LinkStatusDeleted, now, now
+		if asset.RefCount > 0 {
+			asset.RefCount--
+		}
+		if err := tx.Set(ctx, dal4media.NewLinkRecord(mediaID, linkID, link)); err != nil {
+			return err
+		}
+		if err := tx.Set(ctx, dal4media.NewMediaRecord(mediaID, asset)); err != nil {
+			return err
+		}
+		result.RefCount, result.Status, result.PurgeAfter = asset.RefCount, link.Status, link.PurgeAfter
 		return nil
 	})
 	return result, err
