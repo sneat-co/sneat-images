@@ -6,6 +6,8 @@ const variants = {
   thumbnail: { width: 240, height: 240, fit: 'cover' },
   preview: { width: 960, height: 960, fit: 'scale-down' },
   large: { width: 1920, height: 1920, fit: 'scale-down' },
+  'stream-landscape': { width: 1920, height: 1080, fit: 'cover', gravity: 'center' },
+  'stream-portrait': { width: 1080, height: 1920, fit: 'cover', gravity: 'center' },
 } as const;
 
 type Variant = keyof typeof variants;

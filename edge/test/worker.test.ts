@@ -38,6 +38,27 @@ describe('media edge', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['stream-landscape', { width: 1920, height: 1080, fit: 'cover', gravity: 'center' }],
+    ['stream-portrait', { width: 1080, height: 1920, fit: 'cover', gravity: 'center' }],
+  ])('serves the %s variant for public media without a token', async (variant, expected) => {
+    edgeCache();
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      const requestURL = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url);
+      if (requestURL.hostname === 'api.example') {
+        return new Response(null, { status: 307, headers: { Location: 'https://storage.googleapis.com/media-originals/original?signed=true' } });
+      }
+      return new Response('image', { status: 200 });
+    });
+    const imageBinding = images();
+    const response = await worker.fetch(new Request(`https://media.sneat.co/m/m_abcdefghijklmnopqrstuvwxyz/${variant}`), {
+      ORIGIN_BASE_URL: 'https://api.example', MEDIA_ACCESS_PUBLIC_KEY: '', MEDIA_ORIGIN_SECRET: 'secret', IMAGES: imageBinding.binding,
+    } as never);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('public, max-age=31536000, immutable');
+    expect(imageBinding.transform).toHaveBeenCalledWith(expected);
+  });
+
   it('rejects malformed access tokens', async () => {
     const response = await worker.fetch(new Request('https://media.sneat.co/m/m_abcdefghijklmnopqrstuvwxyz/avatar?token=bad'), {
       ORIGIN_BASE_URL: 'https://api.example', MEDIA_ACCESS_PUBLIC_KEY: '', MEDIA_ORIGIN_SECRET: '',
