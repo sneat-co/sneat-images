@@ -125,6 +125,16 @@ images while list/card views request only thumbnails.
 An authorized user can add or capture, preview, replace, remove, and restore one
 Listus item photo while list rows request only thumbnails.
 
+### AC: trusted-release
+
+`Service.ReleaseLink(ctx, mediaID, target, role)` is a trusted server-side
+release for host/module-initiated cleanup after the owning module has already
+deleted its target. It skips the target adapter lookup and the user authorizer,
+marks that exact link deleted with the normal recovery window and decrements
+the asset reference count in one transaction, exactly as Unlink does. A missing
+or already deleted link is success. It is never exposed over HTTP; callers must
+have authorized the action themselves.
+
 ### AC: recover-and-reconcile
 
 Deleted links remain restorable for the configured window. Assets with no active

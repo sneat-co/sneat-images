@@ -418,6 +418,50 @@ func (s *Service) Unlink(ctx context.Context, userID string, target models4media
 	return result, err
 }
 
+// ReleaseLink is a TRUSTED server-side release of one durable media link, for
+// host/module-initiated cleanup after the owning module has already deleted its
+// target (when TargetAdapter.Current can no longer find the link and the user
+// authorizer would refuse). It performs no authorization and never touches the
+// target adapter. Never expose it over HTTP; callers must have authorized the
+// action themselves. It marks the exact link deleted and decrements the asset
+// RefCount exactly as Unlink does, in one transaction. A missing or already
+// deleted link is success.
+func (s *Service) ReleaseLink(ctx context.Context, mediaID string, target models4media.Target, role string) error {
+	s.defaults()
+	if strings.TrimSpace(mediaID) == "" || strings.TrimSpace(role) == "" {
+		return errors.New("mediaID and role are required")
+	}
+	if err := target.Validate(); err != nil {
+		return err
+	}
+	linkID := dal4media.LinkID(target, role)
+	return s.DB.RunReadwriteTransaction(ctx, func(ctx context.Context, tx dal.ReadwriteTransaction) error {
+		link := new(dbo4media.MediaLink)
+		if err := tx.Get(ctx, dal4media.NewLinkRecord(mediaID, linkID, link)); err != nil {
+			if record.IsNotFound(err) {
+				return nil
+			}
+			return err
+		}
+		if link.Status == models4media.LinkStatusDeleted {
+			return nil
+		}
+		asset := new(dbo4media.MediaAsset)
+		if err := tx.Get(ctx, dal4media.NewMediaRecord(mediaID, asset)); err != nil {
+			return err
+		}
+		now := s.Now().UTC()
+		link.Status, link.DeletedAt, link.PurgeAfter = models4media.LinkStatusDeleted, now, now.Add(s.Recovery)
+		if asset.RefCount > 0 {
+			asset.RefCount--
+		}
+		if err := tx.Set(ctx, dal4media.NewLinkRecord(mediaID, linkID, link)); err != nil {
+			return err
+		}
+		return tx.Set(ctx, dal4media.NewMediaRecord(mediaID, asset))
+	})
+}
+
 func (s *Service) Restore(ctx context.Context, userID, mediaID string, target models4media.Target, role string) (LinkResult, error) {
 	s.defaults()
 	if strings.TrimSpace(mediaID) == "" || strings.TrimSpace(role) == "" {
