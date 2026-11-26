@@ -9,7 +9,7 @@ require (
 	github.com/dal-go/dalgo v0.102.6
 	github.com/dal-go/record v0.1.5
 	github.com/sneat-co/sneat-ext-contracts/media v0.1.2
-	github.com/sneat-co/sneat-go-core v0.81.3
+	github.com/sneat-co/sneat-go-core v0.81.5
 	github.com/strongo/validation v0.0.18
 	google.golang.org/api v0.316.0
 )
@@ -65,7 +65,7 @@ require (
 	golang.org/x/oauth2 v0.38.0 // indirect
 	golang.org/x/sync v0.25.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
-	golang.org/x/text v0.43.0 // indirect
+	golang.org/x/text v0.44.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
 	google.golang.org/genproto v0.0.0-20261012220534-4341edf3f941 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20261110000943-09e21b237f2c // indirect
