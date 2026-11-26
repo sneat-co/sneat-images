@@ -9,7 +9,7 @@ require (
 	github.com/dal-go/dalgo v0.102.6
 	github.com/dal-go/record v0.1.5
 	github.com/sneat-co/sneat-ext-contracts/media v0.1.2
-	github.com/sneat-co/sneat-go-core v0.81.5
+	github.com/sneat-co/sneat-go-core v0.81.7
 	github.com/strongo/validation v0.0.18
 	google.golang.org/api v0.316.0
 )
@@ -43,13 +43,13 @@ require (
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.8.1 // indirect
-	github.com/strongo/analytics v0.2.12 // indirect
+	github.com/strongo/analytics v0.2.13 // indirect
 	github.com/strongo/decimal v0.1.2 // indirect
-	github.com/strongo/delaying v0.2.10 // indirect
-	github.com/strongo/logus v0.4.8 // indirect
+	github.com/strongo/delaying v0.2.11 // indirect
+	github.com/strongo/logus v0.4.9 // indirect
 	github.com/strongo/random v0.0.3 // indirect
-	github.com/strongo/slice v0.3.14 // indirect
-	github.com/strongo/strongoapp v0.31.72 // indirect
+	github.com/strongo/slice v0.3.15 // indirect
+	github.com/strongo/strongoapp v0.31.74 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.47.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.72.0 // indirect
